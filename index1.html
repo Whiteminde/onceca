@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI Example - Combined</title>
+  <link href="index.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: rgb(33, 48, 55);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-item {
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .submenu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.9);
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .menu-item:hover .submenu {
+      display: block;
+    }
+
+    .submenu a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      padding: 5px 10px;
+    }
+
+    .submenu a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column; /* 상하 레이아웃 */
+      flex: 1;
+      height: calc(100vh - 50px); /* 네비게이션 바 제외 */
+      margin: 0;
+      padding: 0;
+    }
+
+    .topbox {
+      flex: 1; /* 상단 영역 */
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.8); /* 상단 배경 */
+    }
+
+    .bottombox {
+      flex: 1; /* 하단 영역 */
+      overflow: hidden;
+      background-color: rgb(33, 48, 55); /* 하단 배경 */
+    }
+
+    .topbox iframe, .bottombox iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- 네비게이션 바 -->
+  <div class="navbar">
+    <div class="menu-item">
+      데미지 계산기
+      <div class="submenu">
+        <a href="./index1.html">Scar</a>
+        <a href="#" data-url="미완성">DesertEagle</a>
+      </div>
+    </div>
+    <div class="menu-item">구상중</div>
+    <div class="menu-item">구상중</div>
+    <div class="menu-item">구상중</div>
+    <div class="menu-item">구상중</div>
+    <div class="menu-item">구상중</div>
+  </div>
+
+  <!-- 콘텐츠 -->
+  <div class="content">
+    <!-- Topbox: damege.html -->
+    <div class="topbox">
+      <iframe src="./damege.html"></iframe>
+    </div>
+
+    <!-- Bottombox: circle.html -->
+    <div class="bottombox">
+      <iframe src="../HTML.HTML"></iframe>
+    </div>
+  </div>
+</body>
+</html>
