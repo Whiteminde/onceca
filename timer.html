@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>타이머 인터페이스</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #333;
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
+.timer {
+    background-color: #444;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.timer label {
+    font-weight: bold;
+    color: #f0f0f0;
+}
+.timer span {
+    display: inline-block;
+    min-width: 50px;
+    margin-right: 20px;
+}
+.status {
+    font-style: italic;
+}
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* 초록색 기본 */
+    color: white;
+    cursor: pointer;
+}
+.running { /* 작동 중일 때의 버튼 스타일 */
+    background-color: #f44336; /* 빨간색 */
+    pointer-events: none; /* 클릭 비활성화 */
+}
+.running:hover {
+    background-color: #d32f2f;
+}
+.idle:hover { /* 작동 중이지 않을 때의 버튼 스타일 */
+    background-color: #66bb6a;
+}
+input[type="checkbox"] {
+    width: 20px; /* 체크박스의 너비 */
+    height: 20px; /* 체크박스의 높이 */
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="main">
+    <div class="soundoption">
+        타이머 종료시 알림음 받기 <input type="checkbox" id="soundOption" checked>
+        <br><br>
+    </div>
+    <div class="timer">
+        <label>디스코의 행방</label>
+        <span class="time" id="timer1">60:00</span>
+        <span class="status" id="status1">이용 가능</span>
+        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
+        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+    </div>
+    <div class="timer">
+        <label>지옥으로 통하는길</label>
+        <span class="time" id="timer1">60:00</span>
+        <span class="status" id="status1">이용 가능</span>
+        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
+        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+    </div>
+    <div class="timer">
+        <label>다크사이트</label>
+        <span class="time" id="timer1">60:00</span>
+        <span class="status" id="status1">이용 가능</span>
+        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
+        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+    </div>
+    <div class="timer">
+        <label>타락한 낙원</label>
+        <span class="time" id="timer1">60:00</span>
+        <span class="status" id="status1">이용 가능</span>
+        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
+        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+    </div>
+    <div class="timer">
+        <label>케이론</label>
+        <span class="time" id="timer1">60:00</span>
+        <span class="status" id="status1">이용 가능</span>
+        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
+        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+    </div>
+    <div class="timer">
+        <label>위협적 신호</label>
+        <span class="time" id="timer1">60:00</span>
+        <span class="status" id="status1">이용 가능</span>
+        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
+        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+    </div>
+    <!-- 다른 타이머는 비슷한 구조로 반복됩니다. -->
+</div>
+<audio id="beepSound" src="./nuclear.mp3"></audio> <!-- 소리 파일을 로드 -->
+
+<script>
+document.getElementById('beepSound').volume = 0.4; // 오디오 볼륨을 70%로 설정
+
+function startTimer(timerId, buttonId, statusId, duration) {
+    const display = document.getElementById(timerId);
+    const button = document.getElementById(buttonId);
+    const status = document.getElementById(statusId);
+    let time = duration, minutes, seconds;
+    clearInterval(display.timer);
+    display.timer = setInterval(function () {
+        minutes = parseInt(time / 60, 10);
+        seconds = parseInt(time % 60, 10);
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        display.textContent = minutes + ":" + seconds;
+        button.textContent = "쿨타임 중";
+        button.classList.add("running");
+        button.classList.remove("idle");
+        status.textContent = "";
+        
+        if (--time < 0) {
+            clearInterval(display.timer);
+            if (document.getElementById("soundOption").checked) {
+                document.getElementById("beepSound").play(); // 체크되어 있을 때만 소리 재생
+            }
+            button.textContent = "시작";
+            button.classList.remove("running");
+            button.classList.add("idle");
+            status.textContent = "이용 가능";
+        }
+    }, 1000);
+}
+
+function resetTimer(timerId, buttonId, statusId, duration) {
+    const display = document.getElementById(timerId);
+    const button = document.getElementById(buttonId);
+    const status = document.getElementById(statusId);
+    clearInterval(display.timer);
+    let minutes = parseInt(duration / 60, 10);
+    let seconds = parseInt(duration % 60, 10);
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    display.textContent = minutes + ":" + seconds;
+    button.textContent = "시작";
+    button.classList.remove("running");
+    button.classList.add("idle");
+    status.textContent = "이용 가능";
+}
+</script>
+</body>
+</html>
