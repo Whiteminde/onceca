@@ -61,6 +61,7 @@ input[type="checkbox"] {
         타이머 종료시 알림음 받기 <input type="checkbox" id="soundOption" checked>
         <br><br>
     </div>
+    <!-- 각 타이머 요소에 고유한 ID 부여 -->
     <div class="timer">
         <label>디스코의 행방</label>
         <span class="time" id="timer1">60:00</span>
@@ -70,45 +71,46 @@ input[type="checkbox"] {
     </div>
     <div class="timer">
         <label>지옥으로 통하는길</label>
-        <span class="time" id="timer1">60:00</span>
-        <span class="status" id="status1">이용 가능</span>
-        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
-        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+        <span class="time" id="timer2">60:00</span>
+        <span class="status" id="status2">이용 가능</span>
+        <button class="idle" id="button2" onclick="startTimer('timer2', 'button2', 'status2', 3600)">시작</button>
+        <button onclick="resetTimer('timer2', 'button2', 'status2', 3600)">리셋</button>
     </div>
     <div class="timer">
         <label>다크사이트</label>
-        <span class="time" id="timer1">60:00</span>
-        <span class="status" id="status1">이용 가능</span>
-        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
-        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+        <span class="time" id="timer3">60:00</span>
+        <span class="status" id="status3">이용 가능</span>
+        <button class="idle" id="button3" onclick="startTimer('timer3', 'button3', 'status3', 3600)">시작</button>
+        <button onclick="resetTimer('timer3', 'button3', 'status3', 3600)">리셋</button>
     </div>
     <div class="timer">
         <label>타락한 낙원</label>
-        <span class="time" id="timer1">60:00</span>
-        <span class="status" id="status1">이용 가능</span>
-        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
-        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+        <span class="time" id="timer4">60:00</span>
+        <span class="status" id="status4">이용 가능</span>
+        <button class="idle" id="button4" onclick="startTimer('timer4', 'button4', 'status4', 3600)">시작</button>
+        <button onclick="resetTimer('timer4', 'button4', 'status4', 3600)">리셋</button>
     </div>
     <div class="timer">
         <label>케이론</label>
-        <span class="time" id="timer1">60:00</span>
-        <span class="status" id="status1">이용 가능</span>
-        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
-        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+        <span class="time" id="timer5">60:00</span>
+        <span class="status" id="status5">이용 가능</span>
+        <button class="idle" id="button5" onclick="startTimer('timer5', 'button5', 'status5', 3600)">시작</button>
+        <button onclick="resetTimer('timer5', 'button5', 'status5', 3600)">리셋</button>
     </div>
     <div class="timer">
         <label>위협적 신호</label>
-        <span class="time" id="timer1">60:00</span>
-        <span class="status" id="status1">이용 가능</span>
-        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
-        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+        <span class="time" id="timer6">60:00</span>
+        <span class="status" id="status6">이용 가능</span>
+        <button class="idle" id="button6" onclick="startTimer('timer6', 'button6', 'status6', 3600)">시작</button>
+        <button onclick="resetTimer('timer6', 'button6', 'status6', 3600)">리셋</button>
     </div>
-    <!-- 다른 타이머는 비슷한 구조로 반복됩니다. -->
+    
+    <!-- 추가 타이머... -->
 </div>
 <audio id="beepSound" src="./nuclear.mp3"></audio> <!-- 소리 파일을 로드 -->
 
 <script>
-document.getElementById('beepSound').volume = 0.4; // 오디오 볼륨을 70%로 설정
+document.getElementById('beepSound').volume = 0.4; // 오디오 볼륨을 40%로 설정
 
 function startTimer(timerId, buttonId, statusId, duration) {
     const display = document.getElementById(timerId);
