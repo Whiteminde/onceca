@@ -348,71 +348,7 @@
             document.getElementById('customSeconds').value = "";
         }
 
-        // 포자트럭
-        // PVE 포자트럭 알람 시간 설정 (1시, 15시, 18시, 22시)
-        // 이벤트 시간표 설정
-        const eventSchedule = [
-            { hour: 10, name: "화물쟁탈" },
-            { hour: 12, name: "화물쟁탈" },
-            { hour: 15, name: "화물쟁탈" },
-            { hour: 18, name: "화물쟁탈" },
-            { hour: 21, name: "고속도로 추격전" },
-            { hour: 22, name: "화물쟁탈 마지막 타임" }
-        ];
-
-        let hasAlerted = false;
-
-        function updateEventTimer() {
-            const now = new Date();
-            const currentHour = now.getHours();
-            const currentMinutes = now.getMinutes();
-            const currentSeconds = now.getSeconds();
-
-            const currentEvent = eventSchedule.find(
-                (event, index) =>
-                    currentHour >= event.hour &&
-                    (index === eventSchedule.length - 1 || currentHour < eventSchedule[index + 1].hour)
-            );
-
-            let nextEvent = eventSchedule.find(event => event.hour > currentHour);
-            if (!nextEvent) {
-                nextEvent = { ...eventSchedule[0], hour: eventSchedule[0].hour + 24 };
-            }
-
-            const nextEventTime = new Date(now);
-            nextEventTime.setHours(nextEvent.hour % 24, 0, 0, 0);
-
-            const timeDiff = nextEventTime - now;
-            const remainingHours = Math.floor(timeDiff / (1000 * 60 * 60));
-            const remainingMinutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-            const remainingSeconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-
-            const eventTimerDisplay = document.getElementById('eventTimerDisplay');
-            const eventTimerStatus = document.getElementById('eventTimerStatus');
-            const currentEventName = document.getElementById('currentEventName');
-            const nextEventName = document.getElementById('nextEventName');
-
-            currentEventName.textContent = currentEvent ? currentEvent.name : "없음";
-            nextEventName.textContent = nextEvent.name;
-            eventTimerDisplay.textContent = `${remainingHours.toString().padStart(2, '0')}:${remainingMinutes
-                .toString()
-                .padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-
-            if (timeDiff <= 0 && !hasAlerted) {
-                eventTimerStatus.textContent = "이벤트 시작!";
-                if (document.getElementById("soundOption").checked) {
-                    document.getElementById("beepSound").play();
-                }
-                hasAlerted = true;
-            } else if (timeDiff > 0) {
-                hasAlerted = false;
-                eventTimerStatus.textContent = "대기 중";
-            }
-
-            setTimeout(updateEventTimer, 1000);
-        }
-
-        updateEventTimer();
+       
 
     </script>
 </body>
