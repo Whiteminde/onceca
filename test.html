@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>간단한 방문자 카운터</title>
+</head>
+<body>
+  <h1>현재 방문자 수: <span id="visitor-count">로딩 중...</span></h1>
+
+  <script type="module">
+    // Firebase SDK 가져오기
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+
+    // Firebase 설정
+    const firebaseConfig = {
+      apiKey: "AIzaSyBo3q2gS2ny7NYrz-DmX4ty1vAKSXrtCMc",
+      authDomain: "user-45cd8.firebaseapp.com",
+      databaseURL: "https://user-45cd8-default-rtdb.firebaseio.com",
+      projectId: "user-45cd8",
+      storageBucket: "user-45cd8.firebasestorage.app",
+      messagingSenderId: "456925881248",
+      appId: "1:456925881248:web:42c1b3ecc08037f8cefac5"
+    };
+
+    // Firebase 초기화
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Database의 'visitorCount' 값을 읽기
+    const counterRef = ref(db, 'visitorCount');
+    onValue(counterRef, (snapshot) => {
+      const count = snapshot.val(); // Firebase에서 가져온 값
+      document.getElementById('visitor-count').textContent = count; // 화면에 표시
+    });
+  </script>
+</body>
+</html>
