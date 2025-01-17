@@ -53,6 +53,55 @@ input[type="checkbox"] {
     height: 20px; /* 체크박스의 높이 */
     cursor: pointer;
 }
+
+/* 사용자 타이머 */
+
+input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #555;
+    color: white;
+    text-align: center;
+}
+input[type="number"]::placeholder {
+    color: #aaa;
+}
+.timer input {
+    margin-bottom: 10px;
+}
+#customTimerDisplay {
+    font-weight: bold;
+    font-size: 16px;
+    color: #f0f0f0;
+}
+#customTimerStatus {
+    font-style: italic;
+    color: #ffcc00;
+}
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* 초록색 기본 */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: #66bb6a;
+}
+button.running {
+    background-color: #f44336;
+}
+button.running:hover {
+    background-color: #d32f2f;
+}
+
+
 </style>
 </head>
 <body>
@@ -104,42 +153,63 @@ input[type="checkbox"] {
         <button class="idle" id="button6" onclick="startTimer('timer6', 'button6', 'status6', 3600)">시작</button>
         <button onclick="resetTimer('timer6', 'button6', 'status6', 3600)">리셋</button>
     </div>
+
     
-    <!-- 추가 타이머... -->
+    <!-- 사용자 타이머... -->
+    <div class="timer">
+        <label>사용자 정의 타이머</label>
+        <input type="number" id="customMinutes" placeholder="분" min="0">
+        <input type="number" id="customSeconds" placeholder="초" min="0">
+        <span class="time" id="customTimerDisplay">00:00</span>
+        <span class="status" id="customTimerStatus">설정 대기</span>
+        <button id="customStartButton" onclick="startCustomTimer()">시작</button>
+        <button onclick="resetCustomTimer()">리셋</button>
+    </div>
 </div>
 <audio id="beepSound" src="./nuclear.mp3"></audio> <!-- 소리 파일을 로드 -->
 
 <script>
-document.getElementById('beepSound').volume = 0.3; // 오디오 볼륨을 설정
+document.getElementById('beepSound').volume = 0.2; // 오디오 볼륨을 설정
 
 function startTimer(timerId, buttonId, statusId, duration) {
     const display = document.getElementById(timerId);
     const button = document.getElementById(buttonId);
     const status = document.getElementById(statusId);
-    let time = duration, minutes, seconds;
+    let time = duration;
+
+    // UI를 즉시 업데이트하여 타이머 시작을 표시
+    updateDisplay(display, time);
+    button.textContent = "쿨타임 중"; // 버튼 텍스트 즉시 업데이트
+    button.classList.add("running"); // 버튼 상태 변경
+    button.classList.remove("idle");
+    status.textContent = "이용 불가"; // 상태를 즉시 "쿨타임 중"으로 변경
+
+    // 이전 타이머를 정리하고 새로운 타이머 시작
     clearInterval(display.timer);
     display.timer = setInterval(function () {
-        minutes = parseInt(time / 60, 10);
-        seconds = parseInt(time % 60, 10);
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-        display.textContent = minutes + ":" + seconds;
-        button.textContent = "쿨타임 중";
-        button.classList.add("running");
-        button.classList.remove("idle");
-        status.textContent = "";
-        
-        if (--time < 0) {
+        if (time <= 0) {
             clearInterval(display.timer);
-            if (document.getElementById("soundOption").checked) {
-                document.getElementById("beepSound").play(); // 체크되어 있을 때만 소리 재생
-            }
-            button.textContent = "시작";
-            button.classList.remove("running");
-            button.classList.add("idle");
-            status.textContent = "이용 가능";
+            display.textContent = "00:00";
+            finishTimer(timerId, button, status, duration); // 초기 시간을 전달
+            return;
         }
+        time--;
+        updateDisplay(display, time);
     }, 1000);
+}
+
+function finishTimer(timerId, button, status, initialTime) {
+    if (document.getElementById("soundOption").checked) {
+        document.getElementById("beepSound").play();
+    }
+    button.textContent = "시작";
+    button.classList.remove("running");
+    button.classList.add("idle");
+    status.textContent = "이용 가능";
+
+    // 타이머를 초기 시간으로 리셋
+    const display = document.getElementById(timerId);
+    updateDisplay(display, initialTime); // 초기 시간으로 디스플레이 업데이트
 }
 
 function resetTimer(timerId, buttonId, statusId, duration) {
@@ -147,16 +217,97 @@ function resetTimer(timerId, buttonId, statusId, duration) {
     const button = document.getElementById(buttonId);
     const status = document.getElementById(statusId);
     clearInterval(display.timer);
-    let minutes = parseInt(duration / 60, 10);
-    let seconds = parseInt(duration % 60, 10);
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    display.textContent = minutes + ":" + seconds;
+    updateDisplay(display, duration); // 초기 시간으로 디스플레이 업데이트
     button.textContent = "시작";
     button.classList.remove("running");
     button.classList.add("idle");
     status.textContent = "이용 가능";
 }
+
+function updateDisplay(display, time) {
+    if (time < 0) {
+        display.textContent = "00:00"; // 음수를 00:00으로 처리
+        return;
+    }
+    let minutes = parseInt(time / 60, 10);
+    let seconds = parseInt(time % 60, 10);
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    display.textContent = minutes + ":" + seconds;
+}
+
+
+// 추가 타이머 부분
+
+let customTimerInterval;
+
+function startCustomTimer() {
+    const minutes = parseInt(document.getElementById('customMinutes').value, 10) || 0;
+    const seconds = parseInt(document.getElementById('customSeconds').value, 10) || 0;
+    let totalTime = minutes * 60 + seconds;
+
+    if (totalTime <= 0) {
+        alert('분과 초를 올바르게 입력하세요.');
+        return;
+    }
+
+    const display = document.getElementById('customTimerDisplay');
+    const status = document.getElementById('customTimerStatus');
+    const startButton = document.getElementById('customStartButton');
+
+    // 타이머 작동 중 UI 업데이트
+    status.textContent = "작동 중";
+    startButton.textContent = "쿨타임 중";
+    startButton.classList.add("running");
+    startButton.classList.remove("idle");
+
+    // 이전 타이머가 있다면 초기화
+    clearInterval(customTimerInterval);
+
+    customTimerInterval = setInterval(function () {
+        if (totalTime <= 0) {
+            clearInterval(customTimerInterval);
+            display.textContent = "00:00";
+            finishCustomTimer();
+            return;
+        }
+
+        totalTime--;
+        updateDisplay(display, totalTime);
+    }, 1000);
+}
+
+function finishCustomTimer() {
+    const status = document.getElementById('customTimerStatus');
+    const startButton = document.getElementById('customStartButton');
+
+    if (document.getElementById("soundOption").checked) {
+        document.getElementById("beepSound").play();
+    }
+
+    status.textContent = "완료";
+    startButton.textContent = "시작";
+    startButton.classList.remove("running");
+    startButton.classList.add("idle");
+}
+
+function resetCustomTimer() {
+    clearInterval(customTimerInterval);
+
+    const display = document.getElementById('customTimerDisplay');
+    const status = document.getElementById('customTimerStatus');
+    const startButton = document.getElementById('customStartButton');
+
+    display.textContent = "00:00";
+    status.textContent = "설정 대기";
+    startButton.textContent = "시작";
+    startButton.classList.remove("running");
+    startButton.classList.add("idle");
+
+    document.getElementById('customMinutes').value = "";
+    document.getElementById('customSeconds').value = "";
+}
 </script>
 </body>
 </html>
+

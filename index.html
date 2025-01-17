@@ -4,52 +4,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>원스휴먼 계산기</title>
+  <title>원스휴먼 편의 기능</title>
   <!-- CSS 파일이 현재 경로에 맞게 설정되어야 합니다 -->
   <link href="./index.css" rel="stylesheet">
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DT8CLRD84H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DT8CLRD84H');
+</script>
 </head>
 
 <body>
-<div class="main">
-  <div class="navbar">
-    <div class="menu-item">
-      데미지 계산기
-      <div class="submenu">
-        <a href="#">Scar</a>
-        <a href="#">준비중 DesertEagle</a>
-        <a href="#">준비중 </a>
+  <div class="main">
+    <div class="navbar">
+      <div class="menu-item">
+        데미지 계산기
+        <div class="submenu">
+          <a href="#">Scar</a>
+          <a href="#">준비중 DesertEagle</a>
+          <a href="#">준비중 </a>
+        </div>
       </div>
-    </div>
-    <div class="menu-item">
-      모듈 비교 업뎃예정
-      <div class="submenu">
-        <a href="#">서브메뉴2-1</a>
-        <a href="#">서브메뉴2-2</a>
-        <a href="#">서브메뉴2-3</a>
+      <div class="menu-item">
+        모듈 비교
+        <div class="submenu">
+          <a href="#">모듈 비교</a>
+        </div>
       </div>
-    </div>
-    <div class="menu-item">
-      유틸리티-타이머
-      <div class="submenu">
-        <a href="#">협동퀘스트 타이머</a>
-      </div>
-      
-    </div>
-    
-  </div>
-  <div class="main_content">
-    갤러리 도시도시 | 문의사항은 보이면 주십셔 
-    <div class="iframe_content">
-      <iframe class="content_classiframe" id="content_iframe" src="./1.html">
+      <div class="menu-item">
+        유틸리티-타이머
+        <div class="submenu">
+          <a href="#">협동퀘스트 타이머</a>
+        </div>
 
-      </iframe>
+      </div>
+
+    </div>
+    <div class="main_content">
+      갤러리 도시도시 | 문의사항은 보이면 주십셔
       
 
+      <div class="iframe_content">
+        <iframe class="content_classiframe" id="content_iframe" src="./1.html">
+
+        </iframe>
+
+
+      </div>
+
     </div>
 
   </div>
-
-</div>
   <!-- JavaScript 파일 연결 -->
   <script src="index.js"></script>
 </body>

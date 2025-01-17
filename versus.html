@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모듈비교</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin: 10px;
+            font-weight: 800;
+        }
+
+        h2{
+            font-size: 18PX;
+        }
+
+        iframe {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+
+        }
+
+        html,
+        body {
+            overflow: hidden;
+            /* 내부 문서의 스크롤바 숨기기 */
+            width: 100%;
+            height: 100%;
+
+
+        }
+
+        input {
+            border: 1px solid;
+            border-radius: 4px;
+            padding: 0px;
+            width: 10%;
+        }
+
+        button {
+            border: 1px solid #252525;
+            border-radius: 10px;
+            font-size: 20px;
+            color: #463b4d;
+            font-weight: 700;
+            margin: 10px;
+        }
+    </style>
+
+
+    <script>
+        function compareDamage() {
+            // 기본값 입력 가져오기
+            const atkBase = parseFloat(document.getElementById('atkBase').value) || 0;
+            const critDmgBase = (parseFloat(document.getElementById('critDmgBase').value) || 0) / 100;
+            const weakDmgBase = (parseFloat(document.getElementById('weakDmgBase').value) || 0) / 100;
+            const anyDmgBonusBase = (parseFloat(document.getElementById('anyDmgBonusBase').value) || 0) / 100;
+            const weaponDmgBonusBase = (parseFloat(document.getElementById('weaponDmgBonusBase').value) || 0) / 100;
+            const typeAdvantageBase = parseFloat(document.getElementById('typeAdvantageBase').value) || 1;
+
+            // 비교 1 추가값 가져오기
+            const critDmg1 = (parseFloat(document.getElementById('critDmg1').value) || 0) / 100;
+            const weakDmg1 = (parseFloat(document.getElementById('weakDmg1').value) || 0) / 100;
+            const anyDmgBonus1 = (parseFloat(document.getElementById('anyDmgBonus1').value) || 0) / 100;
+            const weaponDmgBonus1 = (parseFloat(document.getElementById('weaponDmgBonus1').value) || 0) / 100;
+
+            // 비교 2 추가값 가져오기
+            const critDmg2 = (parseFloat(document.getElementById('critDmg2').value) || 0) / 100;
+            const weakDmg2 = (parseFloat(document.getElementById('weakDmg2').value) || 0) / 100;
+            const anyDmgBonus2 = (parseFloat(document.getElementById('anyDmgBonus2').value) || 0) / 100;
+            const weaponDmgBonus2 = (parseFloat(document.getElementById('weaponDmgBonus2').value) || 0) / 100;
+
+            // 기본값을 기준으로 비교 1 데미지 계산
+            const damage1 = atkBase * (1 + critDmgBase + critDmg1 + weakDmgBase + weakDmg1) * (1 + anyDmgBonusBase + anyDmgBonus1) * (1 + weaponDmgBonusBase + weaponDmgBonus1) * typeAdvantageBase;
+
+            // 기본값을 기준으로 비교 2 데미지 계산
+            const damage2 = atkBase * (1 + critDmgBase + critDmg2+ weakDmgBase + weakDmg2) * (1 + anyDmgBonusBase + anyDmgBonus2) * (1 + weaponDmgBonusBase + weaponDmgBonus2) * typeAdvantageBase;
+
+            // 결과 표시
+            document.getElementById('result1').innerText = `모듈 1 데미지: ${Math.ceil(damage1.toFixed(2))}`;
+            document.getElementById('result2').innerText = `모듈 2 데미지: ${Math.ceil(damage2.toFixed(2))}`;
+
+            // 비교 결과
+            if (damage1 > damage2) {
+                document.getElementById('comparison').innerText = "모듈 1의 데미지가 더 큽니다.";
+            } else if (damage2 > damage1) {
+                document.getElementById('comparison').innerText = "모듈 2의 데미지가 더 큽니다.";
+            } else {
+                document.getElementById('comparison').innerText = "두 모듈의 데미지가 동일합니다.";
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+
+
+
+    <div class="calculate_main">
+        <div class="calculate_top"></div>
+        <div class="calculate_bottom">
+            <div class="calculate_left">
+                <h1>모듈비교</h1>
+                사용법,
+                장비한 비교 모듈을 해제한상태로
+                두 모듈의 부옵을 비교하여 적어주시면됩니다.
+                <br><br>
+                <h2>기본값</h2>
+                <form id="baseForm">
+                    <label for="atkBase">공격력 (ATK):</label>
+                    <input type="number" id="atkBase" name="atkBase" value="0" required><br><br>
+
+                    <label for="critDmgBase">치명타 데미지 (CritDmg %):</label>
+                    <input type="number" id="critDmgBase" name="critDmgBase" value="0" required><br><br>
+
+                    <label for="weakDmgBase">약점 데미지 (WeakDmg %):</label>
+                    <input type="number" id="weakDmgBase" name="weakDmgBase" value="0" required><br><br>
+
+                    <label for="anyDmgBonusBase">상위자or일반 데미지 보너스 (AnyDmgBonus %):</label>
+                    <input type="number" id="anyDmgBonusBase" name="anyDmgBonusBase" value="0" required><br><br>
+
+                    <label for="weaponDmgBonusBase">무기 데미지 보너스 (WeaponDmgBonus %):</label>
+                    <input type="number" id="weaponDmgBonusBase" name="weaponDmgBonusBase" value="0" required><br><br>
+
+                    <label for="typeAdvantageBase">속성 상성 (TypeAdvantage):</label>
+                    <select id="typeAdvantageBase" name="typeAdvantageBase" required>
+                        <option value="1">보스몹</option>
+                        <option value="0.95">일반몹(허수아비)</option>
+                    </select><br><br>
+                </form>
+
+                <h2>모듈1</h2>
+                <form id="compare1Form">
+                    <label for="critDmg1">치명타 데미지 (CritDmg %):</label>
+                    <input type="number" id="critDmg1" name="critDmg1" value="0" required><br><br>
+
+                    <label for="weakDmg1">약점 데미지 (WeakDmg %):</label>
+                    <input type="number" id="weakDmg1" name="weakDmg1" value="0" required><br><br>
+
+                    <label for="anyDmgBonus1">상위자or일반 데미지 보너스 (AnyDmgBonus %):</label>
+                    <input type="number" id="anyDmgBonus1" name="anyDmgBonus1" value="0" required><br><br>
+
+                    <label for="weaponDmgBonus1">무기 데미지 보너스 (WeaponDmgBonus %):</label>
+                    <input type="number" id="weaponDmgBonus1" name="weaponDmgBonus1" value="0" required><br><br>
+                </form>
+
+                <h2>모듈2</h2>
+                <form id="compare2Form">
+                    <label for="critDmg2">치명타 데미지 (CritDmg %):</label>
+                    <input type="number" id="critDmg2" name="critDmg2" value="0" required><br><br>
+
+                    <label for="weakDmg2">약점 데미지 (WeakDmg %):</label>
+                    <input type="number" id="weakDmg2" name="weakDmg2" value="0" required><br><br>
+
+                    <label for="anyDmgBonus2">상위자or일반 데미지 보너스 (AnyDmgBonus %):</label>
+                    <input type="number" id="anyDmgBonus2" name="anyDmgBonus2" value="0" required><br><br>
+
+                    <label for="weaponDmgBonus2">무기 데미지 보너스 (WeaponDmgBonus %):</label>
+                    <input type="number" id="weaponDmgBonus2" name="weaponDmgBonus2" value="0" required><br><br>
+                </form>
+
+                <button type="button" onclick="compareDamage()">비교하기</button>
+
+                <p id="result1">모듈 1 데미지: </p>
+                <p id="result2">모듈 2 데미지: </p>
+                <p id="comparison">비교 결과: </p>
+
+                
+            </div>
+
+            <div class="calculate_right"></div>
+
+        </div>
+
+
+    </div>
+    </div>
+    </div>
+
+    <div class="calculate_right"></div>
+
+    </div>
+
+
+    </div>
+    </div>
+
+
+</body>
+
+</html>
