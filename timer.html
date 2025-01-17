@@ -1,313 +1,420 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8">
-<title>타이머 인터페이스</title>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #333;
-    color: white;
-    margin: 0;
-    padding: 20px;
-}
-.timer {
-    background-color: #444;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-.timer label {
-    font-weight: bold;
-    color: #f0f0f0;
-}
-.timer span {
-    display: inline-block;
-    min-width: 50px;
-    margin-right: 20px;
-}
-.status {
-    font-style: italic;
-}
-button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50; /* 초록색 기본 */
-    color: white;
-    cursor: pointer;
-}
-.running { /* 작동 중일 때의 버튼 스타일 */
-    background-color: #f44336; /* 빨간색 */
-    pointer-events: none; /* 클릭 비활성화 */
-}
-.running:hover {
-    background-color: #d32f2f;
-}
-.idle:hover { /* 작동 중이지 않을 때의 버튼 스타일 */
-    background-color: #66bb6a;
-}
-input[type="checkbox"] {
-    width: 20px; /* 체크박스의 너비 */
-    height: 20px; /* 체크박스의 높이 */
-    cursor: pointer;
-}
+    <meta charset="UTF-8">
+    <title>타이머 인터페이스</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
 
-/* 사용자 타이머 */
+        .timer {
+            background-color: #444;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
 
-input[type="number"] {
-    width: 60px;
-    padding: 5px;
-    margin-right: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: #555;
-    color: white;
-    text-align: center;
-}
-input[type="number"]::placeholder {
-    color: #aaa;
-}
-.timer input {
-    margin-bottom: 10px;
-}
-#customTimerDisplay {
-    font-weight: bold;
-    font-size: 16px;
-    color: #f0f0f0;
-}
-#customTimerStatus {
-    font-style: italic;
-    color: #ffcc00;
-}
-button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50; /* 초록색 기본 */
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-button:hover {
-    background-color: #66bb6a;
-}
-button.running {
-    background-color: #f44336;
-}
-button.running:hover {
-    background-color: #d32f2f;
-}
+        .timer label {
+            font-weight: bold;
+            color: #f0f0f0;
+        }
 
+        .timer span {
+            display: inline-block;
+            min-width: 50px;
+            margin-right: 20px;
+        }
 
-</style>
+        .status {
+            font-style: italic;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            /* 초록색 기본 */
+            color: white;
+            cursor: pointer;
+        }
+
+        .running {
+            /* 작동 중일 때의 버튼 스타일 */
+            background-color: #f44336;
+            /* 빨간색 */
+            pointer-events: none;
+            /* 클릭 비활성화 */
+        }
+
+        .running:hover {
+            background-color: #d32f2f;
+        }
+
+        .idle:hover {
+            /* 작동 중이지 않을 때의 버튼 스타일 */
+            background-color: #66bb6a;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            /* 체크박스의 너비 */
+            height: 20px;
+            /* 체크박스의 높이 */
+            cursor: pointer;
+        }
+
+        /* 사용자 타이머 */
+
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #555;
+            color: white;
+            text-align: center;
+        }
+
+        input[type="number"]::placeholder {
+            color: #aaa;
+        }
+
+        .timer input {
+            margin-bottom: 10px;
+        }
+
+        #customTimerDisplay {
+            font-weight: bold;
+            font-size: 16px;
+            color: #f0f0f0;
+        }
+
+        #customTimerStatus {
+            font-style: italic;
+            color: #ffcc00;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            /* 초록색 기본 */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #66bb6a;
+        }
+
+        button.running {
+            background-color: #f44336;
+        }
+
+        button.running:hover {
+            background-color: #d32f2f;
+        }
+    </style>
 </head>
+
 <body>
-<div class="main">
-    <div class="soundoption">
-        타이머 종료시 알림음 받기 <input type="checkbox" id="soundOption" checked>
-        <br><br>
-    </div>
-    <!-- 각 타이머 요소에 고유한 ID 부여 -->
-    <div class="timer">
-        <label>디스코의 행방</label>
-        <span class="time" id="timer1">60:00</span>
-        <span class="status" id="status1">이용 가능</span>
-        <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
-        <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
-    </div>
-    <div class="timer">
-        <label>지옥으로 통하는길</label>
-        <span class="time" id="timer2">60:00</span>
-        <span class="status" id="status2">이용 가능</span>
-        <button class="idle" id="button2" onclick="startTimer('timer2', 'button2', 'status2', 3600)">시작</button>
-        <button onclick="resetTimer('timer2', 'button2', 'status2', 3600)">리셋</button>
-    </div>
-    <div class="timer">
-        <label>다크사이트</label>
-        <span class="time" id="timer3">60:00</span>
-        <span class="status" id="status3">이용 가능</span>
-        <button class="idle" id="button3" onclick="startTimer('timer3', 'button3', 'status3', 3600)">시작</button>
-        <button onclick="resetTimer('timer3', 'button3', 'status3', 3600)">리셋</button>
-    </div>
-    <div class="timer">
-        <label>타락한 낙원</label>
-        <span class="time" id="timer4">60:00</span>
-        <span class="status" id="status4">이용 가능</span>
-        <button class="idle" id="button4" onclick="startTimer('timer4', 'button4', 'status4', 3600)">시작</button>
-        <button onclick="resetTimer('timer4', 'button4', 'status4', 3600)">리셋</button>
-    </div>
-    <div class="timer">
-        <label>케이론</label>
-        <span class="time" id="timer5">60:00</span>
-        <span class="status" id="status5">이용 가능</span>
-        <button class="idle" id="button5" onclick="startTimer('timer5', 'button5', 'status5', 3600)">시작</button>
-        <button onclick="resetTimer('timer5', 'button5', 'status5', 3600)">리셋</button>
-    </div>
-    <div class="timer">
-        <label>위협적 신호</label>
-        <span class="time" id="timer6">60:00</span>
-        <span class="status" id="status6">이용 가능</span>
-        <button class="idle" id="button6" onclick="startTimer('timer6', 'button6', 'status6', 3600)">시작</button>
-        <button onclick="resetTimer('timer6', 'button6', 'status6', 3600)">리셋</button>
-    </div>
+    <div class="main">
+        <div class="soundoption">
+            타이머 종료시 알림음 받기 <input type="checkbox" id="soundOption" checked>
+            <br><br>
+        </div>
+        <!-- 각 타이머 요소에 고유한 ID 부여 -->
+        <div class="timer">
+            <label>디스코의 행방</label>
+            <span class="time" id="timer1">60:00</span>
+            <span class="status" id="status1">이용 가능</span>
+            <button class="idle" id="button1" onclick="startTimer('timer1', 'button1', 'status1', 3600)">시작</button>
+            <button onclick="resetTimer('timer1', 'button1', 'status1', 3600)">리셋</button>
+        </div>
+        <div class="timer">
+            <label>지옥으로 통하는길</label>
+            <span class="time" id="timer2">60:00</span>
+            <span class="status" id="status2">이용 가능</span>
+            <button class="idle" id="button2" onclick="startTimer('timer2', 'button2', 'status2', 3600)">시작</button>
+            <button onclick="resetTimer('timer2', 'button2', 'status2', 3600)">리셋</button>
+        </div>
+        <div class="timer">
+            <label>다크사이트</label>
+            <span class="time" id="timer3">60:00</span>
+            <span class="status" id="status3">이용 가능</span>
+            <button class="idle" id="button3" onclick="startTimer('timer3', 'button3', 'status3', 3600)">시작</button>
+            <button onclick="resetTimer('timer3', 'button3', 'status3', 3600)">리셋</button>
+        </div>
+        <div class="timer">
+            <label>타락한 낙원</label>
+            <span class="time" id="timer4">60:00</span>
+            <span class="status" id="status4">이용 가능</span>
+            <button class="idle" id="button4" onclick="startTimer('timer4', 'button4', 'status4', 3600)">시작</button>
+            <button onclick="resetTimer('timer4', 'button4', 'status4', 3600)">리셋</button>
+        </div>
+        <div class="timer">
+            <label>케이론</label>
+            <span class="time" id="timer5">60:00</span>
+            <span class="status" id="status5">이용 가능</span>
+            <button class="idle" id="button5" onclick="startTimer('timer5', 'button5', 'status5', 3600)">시작</button>
+            <button onclick="resetTimer('timer5', 'button5', 'status5', 3600)">리셋</button>
+        </div>
+        <div class="timer">
+            <label>위협적 신호</label>
+            <span class="time" id="timer6">60:00</span>
+            <span class="status" id="status6">이용 가능</span>
+            <button class="idle" id="button6" onclick="startTimer('timer6', 'button6', 'status6', 3600)">시작</button>
+            <button onclick="resetTimer('timer6', 'button6', 'status6', 3600)">리셋</button>
+        </div>
+        <div class="timer">
+            <label>붉은 구축함</label>
+            <span class="time" id="timer7">60:00</span>
+            <span class="status" id="status7">이용 가능</span>
+            <button class="idle" id="button7" onclick="startTimer('timer7', 'button7', 'status7', 3600)">시작</button>
+            <button onclick="resetTimer('timer7', 'button7', 'status7', 3600)">리셋</button>
+        </div>
 
-    
-    <!-- 사용자 타이머... -->
-    <div class="timer">
-        <label>사용자 정의 타이머</label>
-        <input type="number" id="customMinutes" placeholder="분" min="0">
-        <input type="number" id="customSeconds" placeholder="초" min="0">
-        <span class="time" id="customTimerDisplay">00:00</span>
-        <span class="status" id="customTimerStatus">설정 대기</span>
-        <button id="customStartButton" onclick="startCustomTimer()">시작</button>
-        <button onclick="resetCustomTimer()">리셋</button>
+
+        <!-- 사용자 타이머... -->
+        <div class="timer">
+            <label>사용자 정의 타이머</label>
+            <input type="number" id="customMinutes" placeholder="분" min="0">
+            <input type="number" id="customSeconds" placeholder="초" min="0">
+            <span class="time" id="customTimerDisplay">00:00</span>
+            <span class="status" id="customTimerStatus">설정 대기</span>
+            <button id="customStartButton" onclick="startCustomTimer()">시작</button>
+            <button onclick="resetCustomTimer()">리셋</button>
+        </div>
+        <div class="timer">
+            <label>PVE:화물쟁탈 타이머</label>
+            <span class="time" id="eventTimerDisplay">00:00:00</span>
+            <span class="status" id="eventTimerStatus">대기 중</span>
+            <div>현재 이벤트: <span id="currentEventName">없음</span></div>
+            <div>다음 이벤트: <span id="nextEventName">화물쟁탈</span></div>
+            10시,12시,15시,18시,21시,22시로 설정되어있음
+        </div>
     </div>
-</div>
-<audio id="beepSound" src="./nuclear.mp3"></audio> <!-- 소리 파일을 로드 -->
+    <audio id="beepSound" src="./nuclear.mp3"></audio> <!-- 소리 파일을 로드 -->
 
-<script>
-document.getElementById('beepSound').volume = 0.2; // 오디오 볼륨을 설정
+    <script>
+        document.getElementById('beepSound').volume = 0.3; // 오디오 볼륨을 설정
 
-function startTimer(timerId, buttonId, statusId, duration) {
-    const display = document.getElementById(timerId);
-    const button = document.getElementById(buttonId);
-    const status = document.getElementById(statusId);
-    let time = duration;
+        function startTimer(timerId, buttonId, statusId, duration) {
+            const display = document.getElementById(timerId);
+            const button = document.getElementById(buttonId);
+            const status = document.getElementById(statusId);
+            let time = duration;
 
-    // UI를 즉시 업데이트하여 타이머 시작을 표시
-    updateDisplay(display, time);
-    button.textContent = "쿨타임 중"; // 버튼 텍스트 즉시 업데이트
-    button.classList.add("running"); // 버튼 상태 변경
-    button.classList.remove("idle");
-    status.textContent = "이용 불가"; // 상태를 즉시 "쿨타임 중"으로 변경
+            // UI를 즉시 업데이트하여 타이머 시작을 표시
+            updateDisplay(display, time);
+            button.textContent = "쿨타임 중"; // 버튼 텍스트 즉시 업데이트
+            button.classList.add("running"); // 버튼 상태 변경
+            button.classList.remove("idle");
+            status.textContent = "이용 불가"; // 상태를 즉시 "쿨타임 중"으로 변경
 
-    // 이전 타이머를 정리하고 새로운 타이머 시작
-    clearInterval(display.timer);
-    display.timer = setInterval(function () {
-        if (time <= 0) {
+            // 이전 타이머를 정리하고 새로운 타이머 시작
             clearInterval(display.timer);
-            display.textContent = "00:00";
-            finishTimer(timerId, button, status, duration); // 초기 시간을 전달
-            return;
+            display.timer = setInterval(function () {
+                if (time <= 0) {
+                    clearInterval(display.timer);
+                    display.textContent = "00:00";
+                    finishTimer(timerId, button, status, duration); // 초기 시간을 전달
+                    return;
+                }
+                time--;
+                updateDisplay(display, time);
+            }, 1000);
         }
-        time--;
-        updateDisplay(display, time);
-    }, 1000);
-}
 
-function finishTimer(timerId, button, status, initialTime) {
-    if (document.getElementById("soundOption").checked) {
-        document.getElementById("beepSound").play();
-    }
-    button.textContent = "시작";
-    button.classList.remove("running");
-    button.classList.add("idle");
-    status.textContent = "이용 가능";
+        function finishTimer(timerId, button, status, initialTime) {
+            if (document.getElementById("soundOption").checked) {
+                document.getElementById("beepSound").play();
+            }
+            button.textContent = "시작";
+            button.classList.remove("running");
+            button.classList.add("idle");
+            status.textContent = "이용 가능";
 
-    // 타이머를 초기 시간으로 리셋
-    const display = document.getElementById(timerId);
-    updateDisplay(display, initialTime); // 초기 시간으로 디스플레이 업데이트
-}
+            // 타이머를 초기 시간으로 리셋
+            const display = document.getElementById(timerId);
+            updateDisplay(display, initialTime); // 초기 시간으로 디스플레이 업데이트
+        }
 
-function resetTimer(timerId, buttonId, statusId, duration) {
-    const display = document.getElementById(timerId);
-    const button = document.getElementById(buttonId);
-    const status = document.getElementById(statusId);
-    clearInterval(display.timer);
-    updateDisplay(display, duration); // 초기 시간으로 디스플레이 업데이트
-    button.textContent = "시작";
-    button.classList.remove("running");
-    button.classList.add("idle");
-    status.textContent = "이용 가능";
-}
+        function resetTimer(timerId, buttonId, statusId, duration) {
+            const display = document.getElementById(timerId);
+            const button = document.getElementById(buttonId);
+            const status = document.getElementById(statusId);
+            clearInterval(display.timer);
+            updateDisplay(display, duration); // 초기 시간으로 디스플레이 업데이트
+            button.textContent = "시작";
+            button.classList.remove("running");
+            button.classList.add("idle");
+            status.textContent = "이용 가능";
+        }
 
-function updateDisplay(display, time) {
-    if (time < 0) {
-        display.textContent = "00:00"; // 음수를 00:00으로 처리
-        return;
-    }
-    let minutes = parseInt(time / 60, 10);
-    let seconds = parseInt(time % 60, 10);
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    display.textContent = minutes + ":" + seconds;
-}
+        function updateDisplay(display, time) {
+            if (time < 0) {
+                display.textContent = "00:00"; // 음수를 00:00으로 처리
+                return;
+            }
+            let minutes = parseInt(time / 60, 10);
+            let seconds = parseInt(time % 60, 10);
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            display.textContent = minutes + ":" + seconds;
+        }
 
 
-// 추가 타이머 부분
+        // 추가 타이머 부분
 
-let customTimerInterval;
+        let customTimerInterval;
 
-function startCustomTimer() {
-    const minutes = parseInt(document.getElementById('customMinutes').value, 10) || 0;
-    const seconds = parseInt(document.getElementById('customSeconds').value, 10) || 0;
-    let totalTime = minutes * 60 + seconds;
+        function startCustomTimer() {
+            const minutes = parseInt(document.getElementById('customMinutes').value, 10) || 0;
+            const seconds = parseInt(document.getElementById('customSeconds').value, 10) || 0;
+            let totalTime = minutes * 60 + seconds;
 
-    if (totalTime <= 0) {
-        alert('분과 초를 올바르게 입력하세요.');
-        return;
-    }
+            if (totalTime <= 0) {
+                alert('분과 초를 올바르게 입력하세요.');
+                return;
+            }
 
-    const display = document.getElementById('customTimerDisplay');
-    const status = document.getElementById('customTimerStatus');
-    const startButton = document.getElementById('customStartButton');
+            const display = document.getElementById('customTimerDisplay');
+            const status = document.getElementById('customTimerStatus');
+            const startButton = document.getElementById('customStartButton');
 
-    // 타이머 작동 중 UI 업데이트
-    status.textContent = "작동 중";
-    startButton.textContent = "쿨타임 중";
-    startButton.classList.add("running");
-    startButton.classList.remove("idle");
+            // 타이머 작동 중 UI 업데이트
+            status.textContent = "작동 중";
+            startButton.textContent = "쿨타임 중";
+            startButton.classList.add("running");
+            startButton.classList.remove("idle");
 
-    // 이전 타이머가 있다면 초기화
-    clearInterval(customTimerInterval);
-
-    customTimerInterval = setInterval(function () {
-        if (totalTime <= 0) {
+            // 이전 타이머가 있다면 초기화
             clearInterval(customTimerInterval);
-            display.textContent = "00:00";
-            finishCustomTimer();
-            return;
+
+            customTimerInterval = setInterval(function () {
+                if (totalTime <= 0) {
+                    clearInterval(customTimerInterval);
+                    display.textContent = "00:00";
+                    finishCustomTimer();
+                    return;
+                }
+
+                totalTime--;
+                updateDisplay(display, totalTime);
+            }, 1000);
         }
 
-        totalTime--;
-        updateDisplay(display, totalTime);
-    }, 1000);
-}
+        function finishCustomTimer() {
+            const status = document.getElementById('customTimerStatus');
+            const startButton = document.getElementById('customStartButton');
 
-function finishCustomTimer() {
-    const status = document.getElementById('customTimerStatus');
-    const startButton = document.getElementById('customStartButton');
+            if (document.getElementById("soundOption").checked) {
+                document.getElementById("beepSound").play();
+            }
 
-    if (document.getElementById("soundOption").checked) {
-        document.getElementById("beepSound").play();
-    }
+            status.textContent = "완료";
+            startButton.textContent = "시작";
+            startButton.classList.remove("running");
+            startButton.classList.add("idle");
+        }
 
-    status.textContent = "완료";
-    startButton.textContent = "시작";
-    startButton.classList.remove("running");
-    startButton.classList.add("idle");
-}
+        function resetCustomTimer() {
+            clearInterval(customTimerInterval);
 
-function resetCustomTimer() {
-    clearInterval(customTimerInterval);
+            const display = document.getElementById('customTimerDisplay');
+            const status = document.getElementById('customTimerStatus');
+            const startButton = document.getElementById('customStartButton');
 
-    const display = document.getElementById('customTimerDisplay');
-    const status = document.getElementById('customTimerStatus');
-    const startButton = document.getElementById('customStartButton');
+            display.textContent = "00:00";
+            status.textContent = "설정 대기";
+            startButton.textContent = "시작";
+            startButton.classList.remove("running");
+            startButton.classList.add("idle");
 
-    display.textContent = "00:00";
-    status.textContent = "설정 대기";
-    startButton.textContent = "시작";
-    startButton.classList.remove("running");
-    startButton.classList.add("idle");
+            document.getElementById('customMinutes').value = "";
+            document.getElementById('customSeconds').value = "";
+        }
 
-    document.getElementById('customMinutes').value = "";
-    document.getElementById('customSeconds').value = "";
-}
-</script>
+        // 포자트럭
+        // PVE 포자트럭 알람 시간 설정 (1시, 15시, 18시, 22시)
+        // 이벤트 시간표 설정
+        const eventSchedule = [
+            { hour: 10, name: "화물쟁탈" },
+            { hour: 12, name: "화물쟁탈" },
+            { hour: 15, name: "화물쟁탈" },
+            { hour: 18, name: "화물쟁탈" },
+            { hour: 21, name: "고속도로 추격전" },
+            { hour: 22, name: "화물쟁탈 마지막 타임" }
+        ];
+
+        let hasAlerted = false;
+
+        function updateEventTimer() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentSeconds = now.getSeconds();
+
+            const currentEvent = eventSchedule.find(
+                (event, index) =>
+                    currentHour >= event.hour &&
+                    (index === eventSchedule.length - 1 || currentHour < eventSchedule[index + 1].hour)
+            );
+
+            let nextEvent = eventSchedule.find(event => event.hour > currentHour);
+            if (!nextEvent) {
+                nextEvent = { ...eventSchedule[0], hour: eventSchedule[0].hour + 24 };
+            }
+
+            const nextEventTime = new Date(now);
+            nextEventTime.setHours(nextEvent.hour % 24, 0, 0, 0);
+
+            const timeDiff = nextEventTime - now;
+            const remainingHours = Math.floor(timeDiff / (1000 * 60 * 60));
+            const remainingMinutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const remainingSeconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+            const eventTimerDisplay = document.getElementById('eventTimerDisplay');
+            const eventTimerStatus = document.getElementById('eventTimerStatus');
+            const currentEventName = document.getElementById('currentEventName');
+            const nextEventName = document.getElementById('nextEventName');
+
+            currentEventName.textContent = currentEvent ? currentEvent.name : "없음";
+            nextEventName.textContent = nextEvent.name;
+            eventTimerDisplay.textContent = `${remainingHours.toString().padStart(2, '0')}:${remainingMinutes
+                .toString()
+                .padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+
+            if (timeDiff <= 0 && !hasAlerted) {
+                eventTimerStatus.textContent = "이벤트 시작!";
+                if (document.getElementById("soundOption").checked) {
+                    document.getElementById("beepSound").play();
+                }
+                hasAlerted = true;
+            } else if (timeDiff > 0) {
+                hasAlerted = false;
+                eventTimerStatus.textContent = "대기 중";
+            }
+
+            setTimeout(updateEventTimer, 1000);
+        }
+
+        updateEventTimer();
+
+    </script>
 </body>
-</html>
 
+</html>
