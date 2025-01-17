@@ -198,7 +198,7 @@
             <button onclick="resetCustomTimer()">리셋</button>
         </div>
         <div class="timer">
-            <label>이벤트 타이머</label>
+            <label>다음 타이머</label>
             <span class="time" id="eventTimerDisplay">00:00:00</span>
             <span class="status" id="eventTimerStatus">대기 중</span>
             <div>현재 이벤트: <span id="currentEventName">없음</span></div>
@@ -350,69 +350,78 @@
 
         // 포자트럭
         // PVE 포자트럭 알람 시간 설정 (1시, 15시, 18시, 22시)
-        // 이벤트 시간표 설정
+        // 이벤트 일정
         const eventSchedule = [
-            { hour: 10, name: "화물쟁탈" },
-            { hour: 12, name: "화물쟁탈" },
-            { hour: 15, name: "화물쟁탈" },
-            { hour: 18, name: "화물쟁탈" },
-            { hour: 21, name: "고속도로 추격전" },
-            { hour: 22, name: "화물쟁탈 마지막 타임" }
+            { hour: 10, name: "화물쟁탈 10시" },
+            { hour: 12, name: "화물쟁탈 12시" },
+            { hour: 15, name: "화물쟁탈 15시" },
+            { hour: 18, name: "화물쟁탈 18시" },
+            { hour: 21, name: "고속도로 추격전 21시" },
+            { hour: 22, name: "화물쟁탈 22시 " }
         ];
 
-        let hasAlerted = false;
+        let hasAlerted = false; // 이벤트 알림 상태를 저장
+        let eventTimerInterval; // 타이머 저장
 
         function updateEventTimer() {
-            const now = new Date();
-            const currentHour = now.getHours();
-            const currentMinutes = now.getMinutes();
-            const currentSeconds = now.getSeconds();
-
-            const currentEvent = eventSchedule.find(
-                (event, index) =>
-                    currentHour >= event.hour &&
-                    (index === eventSchedule.length - 1 || currentHour < eventSchedule[index + 1].hour)
-            );
-
-            let nextEvent = eventSchedule.find(event => event.hour > currentHour);
-            if (!nextEvent) {
-                nextEvent = { ...eventSchedule[0], hour: eventSchedule[0].hour + 24 };
+            if (eventTimerInterval) {
+                clearInterval(eventTimerInterval); // 이전 타이머 제거
             }
 
-            const nextEventTime = new Date(now);
-            nextEventTime.setHours(nextEvent.hour % 24, 0, 0, 0);
+            eventTimerInterval = setInterval(() => {
+                const now = new Date();
+                const currentHour = now.getHours();
+                const currentMinutes = now.getMinutes();
+                const currentSeconds = now.getSeconds();
 
-            const timeDiff = nextEventTime - now;
-            const remainingHours = Math.floor(timeDiff / (1000 * 60 * 60));
-            const remainingMinutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-            const remainingSeconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                const currentEvent = eventSchedule.find(
+                    (event, index) =>
+                        currentHour >= event.hour &&
+                        (index === eventSchedule.length - 1 || currentHour < eventSchedule[index + 1].hour)
+                );
 
-            const eventTimerDisplay = document.getElementById('eventTimerDisplay');
-            const eventTimerStatus = document.getElementById('eventTimerStatus');
-            const currentEventName = document.getElementById('currentEventName');
-            const nextEventName = document.getElementById('nextEventName');
-
-            currentEventName.textContent = currentEvent ? currentEvent.name : "없음";
-            nextEventName.textContent = nextEvent.name;
-
-            eventTimerDisplay.textContent = `${remainingHours.toString().padStart(2, '0')}:${remainingMinutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-
-
-            if (timeDiff <= 0 && !hasAlerted) {
-                eventTimerStatus.textContent = "이벤트 시작!";
-                if (document.getElementById("soundOption").checked) {
-                    document.getElementById("beepSound").play();
+                let nextEvent = eventSchedule.find(event => event.hour > currentHour);
+                if (!nextEvent) {
+                    nextEvent = { ...eventSchedule[0], hour: eventSchedule[0].hour + 24 };
                 }
-                hasAlerted = true;
-            } else if (timeDiff > 0) {
-                hasAlerted = false;
-                eventTimerStatus.textContent = "대기 중";
-            }
 
-            setTimeout(updateEventTimer, 1000);
+                const nextEventTime = new Date(now);
+                nextEventTime.setHours(nextEvent.hour % 24, 0, 0, 0);
+
+                let timeDiff = nextEventTime - now;
+                if (timeDiff < 0) {
+                    timeDiff += 24 * 60 * 60 * 1000; // 다음 날로 넘어가는 경우 처리
+                }
+
+                const remainingHours = Math.floor(timeDiff / (1000 * 60 * 60));
+                const remainingMinutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const remainingSeconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                const eventTimerDisplay = document.getElementById('eventTimerDisplay');
+                const eventTimerStatus = document.getElementById('eventTimerStatus');
+                const currentEventName = document.getElementById('currentEventName');
+                const nextEventName = document.getElementById('nextEventName');
+
+                currentEventName.textContent = currentEvent ? currentEvent.name : "없음";
+                nextEventName.textContent = nextEvent.name;
+
+                eventTimerDisplay.textContent = `${remainingHours.toString().padStart(2, '0')}:${remainingMinutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+
+                if (timeDiff <= 1000 && !hasAlerted) {
+                    eventTimerStatus.textContent = "이벤트 시작!";
+                    if (document.getElementById("soundOption").checked) {
+                        const beepSound = document.getElementById("beepSound");
+                        beepSound.play().catch(err => console.error("사운드 재생 오류:", err));
+                    }
+                    hasAlerted = true;
+                } else if (timeDiff > 1000) {
+                    hasAlerted = false;
+                    eventTimerStatus.textContent = "대기 중";
+                }
+            }, 1000);
         }
 
-        updateEventTimer();
+        updateEventTimer(); // 초기 실행
 
     </script>
 </body>
