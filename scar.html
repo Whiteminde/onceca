@@ -6,136 +6,184 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>일반탄 데미지 계산기</title>
     <style>
+        /* 기본 설정 */
         * {
             box-sizing: border-box;
-            margin: 0px;
+            margin: 0;
+            padding: 0;
             font-size: 14px;
             font-weight: 700;
         }
 
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            background-color: #1e1e1e;
+            /* 어두운 배경 */
+            color: #ffffff;
+            /* 기본 텍스트 색상 */
+            font-family: Arial, sans-serif;
+            overflow-y: auto;
+            /* 세로 스크롤 활성화 */
+            overflow-x: hidden;
+            /* 가로 스크롤 숨김 */
+            scrollbar-width: thin;
+            /* Firefox: 얇은 스크롤바 */
+            scrollbar-color: #444 #1e1e1e;
+            /* 스크롤바 색상 */
+        }
+
+        /* Chrome, Edge, Safari용 스크롤바 숨김 */
+        body::-webkit-scrollbar {
+            width: 8px;
+            /* 스크롤바 두께 */
+            background: transparent;
+            /* 기본 배경 숨김 */
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background: #444;
+            /* 스크롤바 색상 */
+            border-radius: 4px;
+            /* 스크롤바 둥근 모서리 */
+        }
+
+        body::-webkit-scrollbar-thumb:hover {
+            background: #666;
+            /* 스크롤바 호버 시 색상 */
+        }
+
+        /* 제목 스타일 */
         h1 {
-            font-size: 30px;
-            margin: 10px;
+            font-size: 24px;
+            margin: 15px 0;
             font-weight: 800;
+            text-align: center;
         }
 
-        h2{
-            font-size: 18PX;
+        h2 {
+            font-size: 16px;
+            margin: 10px 0 20px;
+            text-align: center;
+            color: #cccccc;
         }
 
-        iframe {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-
-        }
-
-        html,
-        body {
-            overflow: hidden;
-            /* 내부 문서의 스크롤바 숨기기 */
-            width: 100%;
-            height: 100%;
-
-
-        }
-
-        .warning {
-            color: red;
-            font-weight: 700;
-            width: 100%;
-            height: 100%;
-        }
-
-        .tooltip-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            /* 배경색 추가*/
-            padding: 10px;
-            /* 패딩 추가*/
-            border: 1px solid #ccc;
-            /* 테두리 추가*/
-            z-index: 100;
-            pointer-events: none;
-            /* 마우스 이벤트 무시*/
-        }
-
-        .tooltip-image {
-            width: 200px;
-            /* 이미지 크기*/
-            display: block;
-            /* 이미지 블록 레벨로 표시*/
-            margin-top: 5px;
-            /* 텍스트와 이미지 사이 간격*/
-        }
-
-        .tooltip-text {
-            font-size: 14px;
-            color: black;
-        }
-
-        .tooltip-text {
-            font-size: 14px;
-            color: black;
-        }
-
+        /* 메인 컨테이너 */
         .calculate_main {
             width: 100%;
-            height: 100%;
-        }
-
-
-        .calculate_bottom {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: row;
+            padding: 20px;
+            background-color: #2c2c2c;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
         .calculate_left {
-            width: 100%;
-            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content:baseline;
+            justify-content: center;
             align-items: baseline;
         }
 
-        input {
-            border: 1px solid;
-            border-radius: 4px;
-            padding: 0px;
-            width: 10%;
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: baseline;
+            justify-content: center;
         }
 
-        button {
-            border: 1px solid #252525;
-            border-radius: 10px;
-            font-size: 20px;
-            color: #463b4d;
-            font-weight: 700;
-            margin: 10px;
-        }
-
-        .line_button {
-            font-weight: 700;
-            border-bottom: 1px solid black;
-            border-top: 1px solid black;
-
-
+        /* 입력 필드 및 선택창 스타일 */
+        input,
+        select {
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #333;
+            color: #ffffff;
             padding: 10px;
-
+            width: 100%;
+            max-width: 300px;
+            margin: 5px 0;
+            font-size: 14px;
         }
 
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #28a745;
+            background-color: #444;
+        }
 
+        /* 버튼 스타일 */
+        button {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: background-color 0.3s;
+        }
 
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* 버튼 그룹 */
         .buttonla {
             display: flex;
-            flex-direction: row;
             justify-content: center;
             align-items: center;
+            
+            margin-top: 20px;
+        }
 
+        /* 결과 텍스트 */
+        p {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #cccccc;
+        }
+
+        /* 툴팁 스타일 */
+        .tooltip-content {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #333;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .tooltip-image {
+            max-width: 180px;
+            margin-top: 10px;
+        }
+
+        /* 반응형 스타일 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            h2 {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 12px;
+                padding: 8px 15px;
+            }
+
+            input,
+            select {
+                font-size: 12px;
+                padding: 8px;
+                max-width: 250px;
+            }
         }
     </style>
     <script>
@@ -176,9 +224,9 @@
             const monsterTypeDmgBonus = parseFloat(document.getElementById('monsterdmgbonus').value) / 100;
             const weaponDmgBonus = parseFloat(document.getElementById('weaponDmgBonus').value) / 100;
             const typeAdvantage = parseFloat(document.getElementById('typeAdvantage').value);
-            const critChance = parseFloat(document.getElementById('CritChance').value) ;
+            const critChance = parseFloat(document.getElementById('CritChance').value);
 
-            
+
 
             const typetuningData = document.getElementById('typetuning').value.split(',');
             const typetuningType = parseFloat(typetuningData[0]) / 100; // 
@@ -207,21 +255,21 @@
             document.getElementById('resultWeak').innerText = `한발당 약점 데미지: ${Math.ceil(WeakDamage)}`;
 
             // resultWeakCrit
-            const WeakCritDamage = (atk * (1 + bulletType + shrapnelDamage + typetuningType)) * (1 + monsterTypeDmgBonus) * (1 + critDmg + weakDmg) * (1 + weaponDmgBonus) *  typeAdvantage;
+            const WeakCritDamage = (atk * (1 + bulletType + shrapnelDamage + typetuningType)) * (1 + monsterTypeDmgBonus) * (1 + critDmg + weakDmg) * (1 + weaponDmgBonus) * typeAdvantage;
             document.getElementById('resultWeakCrit').innerText = `한발당 약점+크리 데미지: ${Math.ceil(WeakCritDamage)}`;
 
             // resultShrapnelWeak
-            const ShrapnelWeakDamage = ((atk * (1 + bulletType + shrapnelDamage + typetuningType)) * 0.5) * (1 + monsterTypeDmgBonus) * (1 + weakDmg) * (1 + weaponDmgBonus) *(1+TypemoduleType)* typeAdvantage;
+            const ShrapnelWeakDamage = ((atk * (1 + bulletType + shrapnelDamage + typetuningType)) * 0.5) * (1 + monsterTypeDmgBonus) * (1 + weakDmg) * (1 + weaponDmgBonus) * (1 + TypemoduleType) * typeAdvantage;
             document.getElementById('resultShrapnelWeak').innerText = `유산탄 발당 약점 데미지: ${Math.ceil(ShrapnelWeakDamage)}`;
 
             // resultShrapnelCrit
-            const ShrapnelCritDamage = ((atk * (1 + bulletType + shrapnelDamage + typetuningType)) * 0.5) * (1 + monsterTypeDmgBonus) * (1 + weakDmg + critDmg ) * (1 + weaponDmgBonus) *(1+TypemoduleType)* typeAdvantage;
+            const ShrapnelCritDamage = ((atk * (1 + bulletType + shrapnelDamage + typetuningType)) * 0.5) * (1 + monsterTypeDmgBonus) * (1 + weakDmg + critDmg) * (1 + weaponDmgBonus) * (1 + TypemoduleType) * typeAdvantage;
             document.getElementById('resultShrapnelCrit').innerText = `유산탄 발당 약점+크리 데미지: ${Math.ceil(ShrapnelCritDamage)}`;
 
 
 
 
-           
+
 
         }
     </script>
@@ -238,77 +286,78 @@
             <div class="calculate_left">
                 <h1>SCAR 계산기</h1>
                 <h2>SCAR 뿐만 아니라 모든무기 총알 데미지는 공식은 같습니다 <BR>카탈같은애들 빼고 단순데미지 구하는데 쓰셔도 무방합니다</h1>
-                사용법,
-                장비창스탯에 있는 백분율을 입력하시면됩니다.<br>
-                크리티컬 프렌지 울프셋등 가변항목은 <br>적용이 안되있으니 허수아비등으로 예열후 <br>i키를 눌러 장비창에서 상세보기 c를 눌러 항목을 입력하시오
-                <br><br>
-                <form id="damageForm">
-                    <div class="spatk">
-                        <label for="atk">공격력(ATK):</label>
-                        <input type="number" id="atk" name="atk" value="409" required>
-                        <div class="tooltip-content" style="display: none; position: absolute;">
-                            <p class="tooltip-text">튜닝에 상관없이 무기수치입력 인벤(x)</p>
-                            <img src="./1.jpg" alt="튜닝 이미지" class="tooltip-image">
+                    <h3>사용법,
+                    장비창스탯에 있는 백분율을 입력하시면됩니다.<br>
+                    크리티컬 프렌지 울프셋등 가변항목은 <br>적용이 안되있으니 허수아비등으로 예열후 <br>i키를 눌러 장비창에서 상세보기 c를 눌러 항목을 입력하시오</h3>
+                    <br>
+                    <form id="damageForm">
+                        <div class="spatk">
+                            <label for="atk">공격력(ATK):</label>
+                            <input type="number" id="atk" name="atk" value="409" required>
+                            <div class="tooltip-content" style="display: none; position: absolute;">
+                                <p class="tooltip-text">튜닝에 상관없이 무기수치입력 인벤(x)</p>
+                                <img src="./1.jpg" alt="튜닝 이미지" class="tooltip-image">
+                            </div>
+                        </div><br>
+
+                        <label for="critDmg">치명타 데미지 (CritDmg %):</label>
+                        <input type="number" id="critDmg" name="critDmg" value="27" required><br><br>
+
+                        <label for="weakDmg">약점 데미지 (WeakDmg %):</label>
+                        <input type="number" id="weakDmg" name="weakDmg" value="61.8" required><br><br>
+
+                        <label for="monsterdmgbonus">상위자or일반 데미지 보너스 (monsterdmgbonus %):</label>
+                        <input type="number" id="monsterdmgbonus" name="monsterdmgbonus" value="2" required><br><br>
+
+                        <label for="weaponDmgBonus">무기 데미지 보너스 (WeaponDmgBonus %):</label>
+                        <input type="number" id="weaponDmgBonus" name="weaponDmgBonus" value="2.4" required><br><br>
+
+                        <label for="typeAdvantage">속성 상성 (TypeAdvantage):</label>
+                        <select id="typeAdvantage" name="typeAdvantage" required>
+                            <option value="1">보스몹</option>
+                            <option value="0.95">일반몹(허수아비)</option>
+                        </select><br><br>
+                        <label for="typebullet">총알타입 (Typebullet):</label>
+                        <select id="typebullet" name="typebullet" required>
+                            <option value="0">없음 구리 총알</option>
+                            <option value="15">텅스텐 총알</option>
+                            <option value="15,10">텅스텐 스마트</option>
+                        </select><br><br>
+
+                        <div class="cri" style="display: none; position: absolute;">
+                            <label for="CritChance">크리티컬 확률 (CritChance %):</label>
+                            <input type="number" id="CritChance" name="CritChance" value="25" required><br><br>
                         </div>
-                    </div><br>
+                        <label for="typetuning">튜닝타입(Typetuning):</label>
+                        <select id="typetuning" name="typetuning" required>
+                            <option value="0">없음</option>
+                            <option value="25,10">정크크</option>
+                            <option value="-10,20">속크크</option>
+                        </select><br><br>
+                        <label for="Typemodule">무기 모듈타입 (Typemodule):</label>
+                        <select id="Typemodule" name="Typemodule" required>
+                            <option value="0">없음</option>
+                            <option value="15,">완전격파(구현)</option>
+                            <option value="999999999,99999999">탄두폭발(미구현)</option>
+                        </select><br><br>
 
-                    <label for="critDmg">치명타 데미지 (CritDmg %):</label>
-                    <input type="number" id="critDmg" name="critDmg" value="27" required><br><br>
+                        <div class="buttonla">
+                            <button type="button" onclick="calculateDamage()">계산하기</button>
+                        </div>
 
-                    <label for="weakDmg">약점 데미지 (WeakDmg %):</label>
-                    <input type="number" id="weakDmg" name="weakDmg" value="61.8" required><br><br>
+                    </form>
+                    
 
-                    <label for="monsterdmgbonus">상위자or일반 데미지 보너스 (monsterdmgbonus %):</label>
-                    <input type="number" id="monsterdmgbonus" name="monsterdmgbonus" value="2" required><br><br>
+                    <p id="resultNormal">한발당 일반 데미지: </p><br>
+                    <p id="resultWeak">한발당 약점 데미지: </p><br>
+                    <p id="resultWeakCrit">한발당 약점+크리 데미지: </p><br>
 
-                    <label for="weaponDmgBonus">무기 데미지 보너스 (WeaponDmgBonus %):</label>
-                    <input type="number" id="weaponDmgBonus" name="weaponDmgBonus" value="2.4" required><br><br>
-
-                    <label for="typeAdvantage">속성 상성 (TypeAdvantage):</label>
-                    <select id="typeAdvantage" name="typeAdvantage" required>
-                        <option value="1">보스몹</option>
-                        <option value="0.95">일반몹(허수아비)</option>
-                    </select><br><br>
-                    <label for="typebullet">총알타입 (Typebullet):</label>
-                    <select id="typebullet" name="typebullet" required>
-                        <option value="0">없음 구리 총알</option>
-                        <option value="15">텅스텐 총알</option>
-                        <option value="15,10">텅스텐 스마트</option>
-                    </select><br><br>
-
-                    <div class="cri" style="display: none; position: absolute;">
-                    <label for="CritChance">크리티컬 확률 (CritChance %):</label>
-                    <input type="number" id="CritChance" name="CritChance" value="25" required><br><br>
-                    </div>
-                    <label for="typetuning">튜닝타입(Typetuning):</label>
-                    <select id="typetuning" name="typetuning" required>
-                        <option value="0">없음</option>
-                        <option value="25,10">정크크</option>
-                        <option value="-10,20">속크크</option>
-                    </select><br><br>
-                    <label for="Typemodule">무기 모듈타입 (Typemodule):</label>
-                    <select id="Typemodule" name="Typemodule" required>
-                        <option value="0">없음</option>
-                        <option value="15,">완전격파(구현)</option>
-                        <option value="999999999,99999999">탄두폭발(미구현)</option>
-                    </select><br><br>
+                    ----------유산탄전용----------
+                    <p id="resultShrapnelWeak">유산탄 발당 약점 데미지: </p><br>
+                    <p id="resultShrapnelCrit">유산탄 발당 약점+크리 데미지: </p><br>
 
 
-                    <div class="buttonla">
-                        <button type="button" onclick="calculateDamage()">계산하기</button>
-                    </div>
-                </form>
 
-                <p id="resultNormal">한발당 일반 데미지: </p><br>
-                <p id="resultWeak">한발당 약점 데미지: </p><br>
-                <p id="resultWeakCrit">한발당 약점+크리 데미지: </p><br>
-
-                ----------유산탄전용----------
-                <p id="resultShrapnelWeak">유산탄 발당 약점 데미지: </p><br>
-                <p id="resultShrapnelCrit">유산탄 발당 약점+크리 데미지: </p><br>
-
-
-               
             </div>
         </div>
 

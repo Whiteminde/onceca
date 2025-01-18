@@ -7,54 +7,175 @@
     <title>모듈비교</title>
 
     <style>
+        /* 기본 설정 */
         * {
             box-sizing: border-box;
-            margin: 0px;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
             font-size: 14px;
             font-weight: 700;
         }
+        iframe,
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #353535;
+            /* 어두운 배경 */
+            color: #ffffff;
+            /* 기본 텍스트 색상 */
+            font-family: Arial, sans-serif;
+            overflow-y: auto;
+            /* 세로 스크롤 활성화 */
+            overflow-x: hidden;
+            /* 가로 스크롤 숨김 */
+            scrollbar-width: thin;
+            /* Firefox: 얇은 스크롤바 */
+            scrollbar-color: #444 #1e1e1e;
+            
+            /* 스크롤바 색상 */
+        }
+
+        /* Chrome, Edge, Safari용 스크롤바 숨김 */
+        body::-webkit-scrollbar {
+            width: 8px;
+            /* 스크롤바 두께 */
+            background: transparent;
+            /* 기본 배경 숨김 */
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background: #444;
+            /* 스크롤바 색상 */
+            border-radius: 4px;
+            /* 스크롤바 둥근 모서리 */
+        }
+
+        body::-webkit-scrollbar-thumb:hover {
+            background: #666;
+            /* 스크롤바 호버 시 색상 */
+        }
+
+
+
+
+        /* 메인 컨텐츠 */
+        .calculate_main {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 10px;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .calculate_left {
+            display: flex;
+            flex-direction: column;
+            align-items: baseline;
+            
+            
+        }
 
         h1 {
-            font-size: 30px;
-            margin: 10px;
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-align: center;
             font-weight: 800;
         }
 
-        h2{
-            font-size: 18PX;
+        h2 {
+            font-size: 18px;
+            margin-bottom: 5px ;
+            color: #cccccc;
         }
 
-        iframe {
-            overflow: hidden;
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: baseline;
             width: 100%;
-            height: 100%;
-
         }
 
-        html,
-        body {
-            overflow: hidden;
-            /* 내부 문서의 스크롤바 숨기기 */
-            width: 100%;
-            height: 100%;
-
-
+        /* 입력 필드 및 선택창 */
+        input,
+        select {
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #333;
+            color: #ffffff;
+            padding: 10px;
+            width: 50%;
+            height: 35px;
+            /* 입력 박스의 가로 크기 설정 */
+            max-width: 100%;
+            /* 화면 너비에 따라 최대 크기 제한 */
+            margin: 2px 0;
+            font-size: 14px;
         }
 
-        input {
-            border: 1px solid;
-            border-radius: 4px;
-            padding: 0px;
-            width: 10%;
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #28a745;
+            background-color: #444;
         }
 
+        /* 버튼 스타일 */
         button {
-            border: 1px solid #252525;
-            border-radius: 10px;
-            font-size: 20px;
-            color: #463b4d;
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
             font-weight: 700;
-            margin: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* 결과 텍스트 */
+        p {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #ffffff;
+        }
+
+        /* 반응형 스타일 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+
+            .menu-item {
+                margin: 5px 0;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            h2 {
+                font-size: 16px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+
+            input,
+            select {
+                font-size: 12px;
+                max-width: 100%;
+            }
         }
     </style>
 
@@ -85,7 +206,7 @@
             const damage1 = atkBase * (1 + critDmgBase + critDmg1 + weakDmgBase + weakDmg1) * (1 + anyDmgBonusBase + anyDmgBonus1) * (1 + weaponDmgBonusBase + weaponDmgBonus1) * typeAdvantageBase;
 
             // 기본값을 기준으로 비교 2 데미지 계산
-            const damage2 = atkBase * (1 + critDmgBase + critDmg2+ weakDmgBase + weakDmg2) * (1 + anyDmgBonusBase + anyDmgBonus2) * (1 + weaponDmgBonusBase + weaponDmgBonus2) * typeAdvantageBase;
+            const damage2 = atkBase * (1 + critDmgBase + critDmg2 + weakDmgBase + weakDmg2) * (1 + anyDmgBonusBase + anyDmgBonus2) * (1 + weaponDmgBonusBase + weaponDmgBonus2) * typeAdvantageBase;
 
             // 결과 표시
             document.getElementById('result1').innerText = `모듈 1 데미지: ${Math.ceil(damage1.toFixed(2))}`;
@@ -114,7 +235,7 @@
             <div class="calculate_left">
                 <h1>모듈비교</h1>
                 사용법,
-                장비한 비교 모듈을 해제한상태로
+                장비한 비교 모듈을 해제한상태로<br>
                 두 모듈의 부옵을 비교하여 적어주시면됩니다.
                 <br><br>
                 <h2>기본값</h2>
@@ -177,7 +298,7 @@
                 <p id="result2">모듈 2 데미지: </p>
                 <p id="comparison">비교 결과: </p>
 
-                
+
             </div>
 
             <div class="calculate_right"></div>
