@@ -215,7 +215,7 @@
             document.getElementById('resultShrapnelWeak').innerText = `유산탄 발당 약점 데미지: ${Math.ceil(ShrapnelWeakDamage)}`;
 
             // resultShrapnelCrit
-            const ShrapnelCritDamage = ((atk * (1 + bulletType + shrapnelDamage + typetuningType)) * 0.5) * (1 + monsterTypeDmgBonus) * (1 + weakDmg + critDmg + 0.3) * (1 + weaponDmgBonus) *(1+TypemoduleType)* typeAdvantage;
+            const ShrapnelCritDamage = ((atk * (1 + bulletType + shrapnelDamage + typetuningType)) * 0.5) * (1 + monsterTypeDmgBonus) * (1 + weakDmg + critDmg ) * (1 + weaponDmgBonus) *(1+TypemoduleType)* typeAdvantage;
             document.getElementById('resultShrapnelCrit').innerText = `유산탄 발당 약점+크리 데미지: ${Math.ceil(ShrapnelCritDamage)}`;
 
 
