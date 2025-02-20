@@ -133,6 +133,15 @@
     <div class="main">
         <div class="soundoption">
             타이머 종료시 알림음 받기 <input type="checkbox" id="soundOption" checked>
+            <br>
+            <div class="soundoption">
+                <label>
+                    달의 징조 (5분 전) 알림음 받기
+                    <input type="checkbox" id="hourlySoundOption">
+                </label>
+            </div>
+
+
             <br><br>
         </div>
         <!-- 각 타이머 요소에 고유한 ID 부여 -->
@@ -197,6 +206,8 @@
             <button id="customStartButton" onclick="startCustomTimer()">시작</button>
             <button onclick="resetCustomTimer()">리셋</button>
         </div>
+
+        <!-- 화물쟁탈 타이머... -->
         <div class="timer">
             <label>다음 타이머</label>
             <span class="time" id="eventTimerDisplay">00:00:00</span>
@@ -204,6 +215,12 @@
             <div>현재 이벤트: <span id="currentEventName">없음</span></div>
             <div>다음 이벤트: <span id="nextEventName">화물쟁탈</span></div>
             10시,12시,15시,18시,21시,22시로 설정되어있음
+        </div>
+        <!-- 달쟁타이머... -->
+        <div class="timer">
+            <label>달의 징조 시작까지</label>
+            <span class="time" id="hourly52TimerDisplay">00:00</span>
+            <span class="status" id="hourly52TimerStatus">대기 중</span>
         </div>
     </div>
     <audio id="beepSound" src="./nuclear.mp3"></audio> <!-- 소리 파일을 로드 -->
@@ -422,6 +439,70 @@
         }
 
         updateEventTimer(); // 초기 실행
+
+
+        // 매시 52분까지 카운트다운 & 47분에 알림
+        let hourly52TimerInterval;
+        let hasHourlyAlerted = false; // 47분 알림 상태 저장
+
+        function updateHourly52Timer() {
+            if (hourly52TimerInterval) {
+                clearInterval(hourly52TimerInterval); // 기존 타이머 중지
+            }
+
+            hourly52TimerInterval = setInterval(() => {
+                const now = new Date();
+                const currentMinutes = now.getMinutes();
+                const currentSeconds = now.getSeconds();
+
+                let targetMinutes = 52; // 목표 시간: 52분
+                let alertMinutes = 47;  // 5분 전 알림: 47분
+                let targetHour = now.getHours(); // 현재 시간
+
+                if (currentMinutes >= targetMinutes) {
+                    // 이미 52분이 지났다면 다음 시간의 52분으로 설정
+                    targetHour += 1;
+                }
+
+                const targetTime = new Date();
+                targetTime.setHours(targetHour, targetMinutes, 0, 0); // 52분 목표 시간 설정
+
+                let timeDiff = targetTime - now;
+                if (timeDiff < 0) {
+                    timeDiff += 60 * 60 * 1000; // 다음 시간으로 이동
+                }
+
+                const remainingMinutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const remainingSeconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                const hourly52TimerDisplay = document.getElementById('hourly52TimerDisplay');
+                const hourly52TimerStatus = document.getElementById('hourly52TimerStatus');
+
+                hourly52TimerDisplay.textContent = `${remainingMinutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+
+                // 매시 47분에 알람 울림
+                if (currentMinutes === alertMinutes && !hasHourlyAlerted) {
+                    const soundEnabled = document.getElementById("hourlySoundOption").checked; // 체크박스 확인
+
+                    if (soundEnabled) {
+                        const beepSound = document.getElementById("beepSound");
+                        beepSound.play().catch(err => console.error("사운드 재생 오류:", err));
+                    }
+
+                    hasHourlyAlerted = true; // 알람이 울렸음을 기록
+                    hourly52TimerStatus.textContent = "5분 전 알림!";
+                } else if (currentMinutes !== alertMinutes) {
+                    hasHourlyAlerted = false; // 새로운 시간대에 다시 알람 가능
+                    hourly52TimerStatus.textContent = "대기 중";
+                }
+            }, 1000);
+        }
+
+        // 초기 실행
+        updateHourly52Timer();
+
+
+
 
     </script>
 </body>
